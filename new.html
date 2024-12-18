@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Health App</title>
+  <style>
+    /* CSS */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f8ff;
+    }
+    .screen {
+      width: 100%;
+      max-width: 400px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      padding: 20px;
+      width: 100%;
+      background-color: #82c0cc;
+      color: white;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 80%;
+      margin-top: 20px;
+    }
+    form input {
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    form button {
+      padding: 12px;
+      background-color: #ff8c00;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .dashboard-options button, footer button {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      background-color: #20b2aa;
+      cursor: pointer;
+    }
+    footer {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      width: 100%;
+      background-color: #d3e0dc;
+    }
+    .tips-box, .chat-box, .ai-assistant, .health-status {
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="screen">
+    <header>
+      <h1>Welcome to Your Mental Wellness App</h1>
+    </header>
+    <form onsubmit="login(event)">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <!-- Home Dashboard Screen -->
+  <div id="homeScreen" class="screen" style="display: none;">
+    <header>
+      <h1>Mental Wellness Dashboard</h1>
+    </header>
+    <section class="dashboard-options">
+      <button onclick="openScreen('profileScreen')">Profile</button>
+      <button onclick="openScreen('chatScreen')">Chat Box</button>
+      <button onclick="openScreen('aiAssistantScreen')">AI Assistant</button>
+      <button onclick="openScreen('tipsScreen')">Daily Tips</button>
+      <button onclick="openScreen('healthScreen')">Health Status</button>
+      <button onclick="logout()">Logout</button>
+    </section>
+    <footer>
+      <button onclick="openScreen('profileScreen')">Profile</button>
+      <button onclick="openScreen('communityScreen')">Community</button>
+      <button onclick="openScreen('appointmentsScreen')">Appointments</button>
+    </footer>
+  </div>
+
+  <!-- Profile Screen -->
+  <div id="profileScreen" class="screen" style="display: none;">
+    <header>
+      <h2>Profile</h2>
+      <button onclick="goBack()">Back</button>
+    </header>
+    <div class="profile-details">
+      <img src="profile.jpg" alt="Profile Picture">
+      <p id="profileName">Name: </p>
+      <p id="profilePassword">Password: </p>
+      <button onclick="goBack()">Back to Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Chat Box Screen -->
+  <div id="chatScreen" class="screen" style="display: none;">
+    <header>
+      <h2>Chat with Support</h2>
+      <button onclick="goBack()">Back</button>
+    </header>
+    <div class="chat-box">
+      <p>Welcome! How can we assist you today?</p>
+    </div>
+  </div>
+
+  <!-- AI Assistant Screen -->
+  <div id="aiAssistantScreen" class="screen" style="display: none;">
+    <header>
+      <h2>AI Assistant</h2>
+      <button onclick="goBack()">Back</button>
+    </header>
+    <div class="ai-assistant">
+      <p>Hi! I’m here to help with any mental wellness questions you have.</p>
+    </div>
+  </div>
+
+  <!-- Tips Screen -->
+  <div id="tipsScreen" class="screen" style="display: none;">
+    <header>
+      <h2>Daily Tips</h2>
+      <button onclick="goBack()">Back</button>
+    </header>
+    <div class="tips-box">
+      <p id="tipText"></p>
+    </div>
+  </div>
+
+  <!-- Health Status Screen -->
+  <div id="healthScreen" class="screen" style="display: none;">
+    <header>
+      <h2>Mental Health Status</h2>
+      <button onclick="goBack()">Back</button>
+    </header>
+    <div class="health-status">
+      <p>Current Mental Health Parameters:</p>
+      <ul>
+        <li>Mood Level: Stable</li>
+        <li>Stress Level: Moderate</li>
+        <li>Sleep Quality: Good</li>
+        <li>Energy Levels: Moderate</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript
+    const tipsArray = [
+      "Take a 5-minute walk to clear your mind.",
+      "Drink a glass of water and stay hydrated.",
+      "Write down 3 things you’re grateful for.",
+      "Take 10 deep breaths to calm yourself.",
+      "Spend a few minutes in nature if possible.",
+      "Listen to your favorite song and relax."
+    ];
+
+    // Display a random tip on the Tips screen
+    function showTip() {
+      const randomTip = tipsArray[Math.floor(Math.random() * tipsArray.length)];
+      document.getElementById('tipText').innerText = randomTip;
+    }
+
+    // Function to handle login and store username and password
+    function login(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Store username and password in profile
+      document.getElementById('profileName').innerText = `Name: ${username}`;
+      document.getElementById('profilePassword').innerText = `Password: ${password}`;
+
+      // Show home screen
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('homeScreen').style.display = 'block';
+    }
+
+    // Function to handle screen navigation
+    function openScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.style.display = 'none';
+      });
+      document.getElementById(screenId).style.display = 'block';
+
+      if (screenId === 'tipsScreen') showTip();
+    }
+
+    // Go back to home screen
+    function goBack() {
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.style.display = 'none';
+      });
+      document.getElementById('homeScreen').style.display = 'block';
+    }
+
+    // Logout function to go back to login screen
+    function logout() {
+      document.getElementById('homeScreen').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
